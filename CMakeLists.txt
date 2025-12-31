@@ -21,6 +21,9 @@ endfunction()
 add_executable(GraphicsTest 
         res.rc
         src/Main.cpp
+		src/Window.cpp
+		src/glad.c
+		src/Message.cpp
 )
 
 copy_exe_to_install(GraphicsTest GraphicsTest)
@@ -33,4 +36,5 @@ target_link_libraries(GraphicsTest
                     ${CMAKE_SOURCE_DIR}/../SDL3-3.2.26/libSDL_uclibc.a
                     ${CMAKE_SOURCE_DIR}/../SDL3-3.2.26/libSDL3.dll.a
                     ${CMAKE_SOURCE_DIR}/../SDL3-3.2.26/libSDL3_test.a
-                    opengl32)
+                    opengl32
+					d3d9)
