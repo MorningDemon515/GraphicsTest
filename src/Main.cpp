@@ -1,25 +1,15 @@
+#include "Main.h"
 #include <iostream>
 #include <SDL3/SDL.h>
-#include "Window.h"
-#include "glad.h"
-#include "Message.h"
-
-#ifdef _WIN32
-#include <windows.h>
-#include <d3d9.h>
-#endif
 
 SDL_Window* window;
 SDL_Event event;
 
 int s_renderer = 0;
 
-#ifdef _WIN32
-HWND windowHandle;
-
-IDirect3D9* d3d9;
-IDirect3DDevice9* device;
-#endif
+void InitWorld();
+void RenderWorld(float deltaTime);
+void FreeWorld();
 
 int main()
 {
@@ -34,7 +24,7 @@ int main()
     std::cin >> h;
 */    
 
-/*
+
     #ifdef _WIN32
     std::cout << "Enter Renderer: "; //0 : OpenGL; 1 : Direct3D 9
     std::cin >> s_renderer;
@@ -45,51 +35,26 @@ int main()
         SDL_Quit();
         return -1;
     }
+    std::cout << "Current Renderer: ";
+    if(s_renderer == 1)
+    {
+        std::cout << "Direct3D 9" << std::endl;
+    }
+    else
+    {
+        std::cout << "OpenGL" << std::endl;
+    }
     #endif
-*/
+    
     window = SDL_CreateWindow(
         "GraphicsTest",
         w, h,
         SDL_WINDOW_OPENGL
     );
 
-    SDL_PropertiesID props;
-    props = SDL_GetWindowProperties(window);
-    windowHandle = static_cast<HWND>(SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL));
-
-    SDL_GLContext glContext;
-    glContext = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, glContext);
-    gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
-
-    #ifdef _WIN32
+    InitWorld();
     
-    d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
-    D3DPRESENT_PARAMETERS d3dpp;
-    d3dpp.BackBufferWidth = GetWindowWidth();
-    d3dpp.BackBufferHeight = GetWindowHeight();
-    d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
-    d3dpp.BackBufferCount = 1;
-    d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
-    d3dpp.MultiSampleQuality = 0;
-    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD; 
-    d3dpp.hDeviceWindow = windowHandle;
-    d3dpp.EnableAutoDepthStencil = true; 
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
-	d3dpp.Flags = 0;
-	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-
-    d3d9->CreateDevice(
-		D3DADAPTER_DEFAULT, 
-		D3DDEVTYPE_HAL,   
-		windowHandle,    
-		D3DCREATE_HARDWARE_VERTEXPROCESSING,      
-	    &d3dpp,   
-	    &device);       
-
-    #endif
-
+    static float lastTime = (float)SDL_GetTicks(); 
     while (1)
     {
         SDL_PollEvent(&event);
@@ -97,31 +62,45 @@ int main()
         if(event.type == SDL_EVENT_QUIT)
             break;
 
-        if(s_renderer == 1)
-        {
-            #ifdef _WIN32
-            device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 255,0), 1.0f, 0);
+        float currTime  = (float)SDL_GetTicks();
+		float timeDelta = (currTime - lastTime)*0.001f;
 
-            device->Present(0, 0, 0, 0);
+        RenderWorld(timeDelta);
 
-            #endif
-        }
-        else
-        {
-            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            SDL_GL_SwapWindow(window);
-        }
+        lastTime = currTime;
     }
-    
-    #ifdef _WIN32
-    d3d9->Release();
-    device->Release();
-    #endif
-    SDL_DestroyProperties(props);
-    SDL_GL_DestroyContext(glContext);
+
+    FreeWorld();
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
+}
+
+int GetWindowWidth()
+{
+    int w, h;
+    SDL_GetWindowSize(window, &w, &h);
+    return w;
+}
+
+int GetWindowHeight()
+{
+    int w, h;
+    SDL_GetWindowSize(window, &w, &h);
+    return h;
+}
+
+void ErrorMsg(const char* message)
+{
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Engine Error!", message, NULL);
+}
+
+void Message(const char* message)
+{
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Engine Message", message, NULL);
+}
+
+void WarnMsg(const char* message)
+{
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Engine Warning!", message, NULL);
 }

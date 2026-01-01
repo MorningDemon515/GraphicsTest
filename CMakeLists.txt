@@ -21,15 +21,17 @@ endfunction()
 add_executable(GraphicsTest 
         res.rc
         src/Main.cpp
-		src/Window.cpp
 		src/glad.c
-		src/Message.cpp
+		src/Renderer/Renderer.cpp
+		src/World.cpp
 )
 
 copy_exe_to_install(GraphicsTest GraphicsTest)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/../SDL3-3.2.26/include
+	${CMAKE_SOURCE_DIR}/src/Renderer
+	${CMAKE_SOURCE_DIR}/src/Math
 )
 
 target_link_libraries(GraphicsTest
