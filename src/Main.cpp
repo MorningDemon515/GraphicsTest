@@ -24,7 +24,6 @@ int main()
     std::cin >> h;
 */    
 
-
     #ifdef _WIN32
     std::cout << "Enter Renderer: "; //0 : OpenGL; 1 : Direct3D 9
     std::cin >> s_renderer;
@@ -59,7 +58,7 @@ int main()
     {
         SDL_PollEvent(&event);
 
-        if(event.type == SDL_EVENT_QUIT)
+        if (event.type == SDL_EVENT_QUIT)
             break;
 
         float currTime  = (float)SDL_GetTicks();

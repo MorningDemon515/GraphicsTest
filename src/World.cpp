@@ -6,11 +6,11 @@
 
 extern SDL_Window* window;
 
-std::unique_ptr<Renderer> renderer;
+std::unique_ptr<CRenderer> renderer;
 
 void InitWorld()
 {
-    renderer = std::make_unique<Renderer>(window);
+    renderer = std::make_unique<CRenderer>(window);
 }
 
 void RenderWorld(float deltaTime)

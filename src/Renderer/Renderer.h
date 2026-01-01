@@ -8,7 +8,7 @@
 #include <d3d9.h>
 #endif
 
-class Renderer
+class CRenderer
 {
 private:
     SDL_Window* window;
@@ -22,9 +22,9 @@ private:
     IDirect3DDevice9* device;
     #endif
 public:
-    Renderer() { };
-    Renderer(SDL_Window* w);
-    ~Renderer();
+    CRenderer() { };
+    CRenderer(SDL_Window* w);
+    ~CRenderer();
 
     void Clear();
     void Present();

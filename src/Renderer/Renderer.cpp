@@ -4,7 +4,7 @@
 
 extern int s_renderer;
 
-Renderer::Renderer(SDL_Window* w) : window(w)
+CRenderer::CRenderer(SDL_Window* w) : window(w)
 {
     glContext = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, glContext);
@@ -45,7 +45,7 @@ Renderer::Renderer(SDL_Window* w) : window(w)
     #endif
 }
 
-Renderer::~Renderer()
+CRenderer::~CRenderer()
 {
     SDL_GL_DestroyContext(glContext);
 
@@ -55,10 +55,10 @@ Renderer::~Renderer()
     #endif
 }
 
-void Renderer::Present()
+void CRenderer::Present()
 {
     
-    if(s_renderer == 1)
+    if (s_renderer == 1)
     {
     #ifdef _WIN32
         device->Present(0, 0 ,0 ,0);
@@ -71,7 +71,7 @@ void Renderer::Present()
     
 }
 
-void Renderer::Clear()
+void CRenderer::Clear()
 {
     if(s_renderer == 1)
     {
